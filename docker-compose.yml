@@ -1,0 +1,47 @@
+version: "3"
+services:
+  noderuby:
+    build: ./NodeRuby
+    dockerfile: ./Dockerfile
+    links:
+      - "influxdb"
+    environment:
+      - TZ=${TIMEZONE}
+      - INFLUXDB_URL=${INFLUXDB_URL}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_ORG=${INFLUXDB_ORG}
+      - INFLUXDB_BUCKET=${INFLUXDB_BUCKETL}
+    restart: on-failure:10
+  sensormeasurements:
+    build: ./SensorMeasurements
+    dockerfile: ./Dockerfile
+    links:
+      - "influxdb"
+      - "mosquitto"
+    environment:
+      - TZ=${TIMEZONE}
+      - INFLUXDB_URL=${INFLUXDB_URL}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_ORG=${INFLUXDB_ORG}
+      - INFLUXDB_BUCKET=${INFLUXDB_BUCKET}
+      - TTN_USERNAME=${TTN_USERNAME}
+      - TTN_HOST=${TTN_HOST}
+      - TTN_API_TOKEN=${TTN_API_TOKEN}
+      - TTN_MQTT_TOPIC=${TTN_MQTT_TOPIC}
+    restart: on-failure:10
+  weatherstationmeasurements:
+    build: ./WeatherStationMeasurements
+    dockerfile: ./Dockerfile
+    links:
+      - "influxdb"
+      - "mosquitto"
+    environment:
+      - TZ=${TIMEZONE}
+      - INFLUXDB_URL=${INFLUX_URL}
+      - INFLUXDB_TOKEN=${INFLUX_TOKEN}
+      - INFLUXDB_ORG=${INFLUX_ORG}
+      - INFLUXDB_BUCKET=${INFLUX_BUCKET}
+      - MOSQUITTO_USER=${MOSQUITTO_USER}
+      - MOSQUITTO_PASSWD=${MOSQUITTO_PASSWD}
+      - MOSQUITTO_URL_WEATHER_STATION=${MOSQUITTO_URL_WEATHER_STATION}
+    restart: on-failure:10

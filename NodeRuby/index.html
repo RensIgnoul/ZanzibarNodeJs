@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration Form</title>
+  </head>
+  <script src="script.js" defer></script>
+  <body>
+    <h1>[SIS] Sensor Registration Form</h1>
+    <form id="sensorForm">
+      <input
+        id="boardIdS"
+        name="boardId"
+        type="text"
+        placeholder="Board ID (eui)"
+      />
+      <input type="hidden" name="formId" value="SensorForm" />
+      <input
+        id="sensorId"
+        name="sensorId"
+        type="text"
+        placeholder="Sensor ID (I2C Address)"
+      />
+      <input
+        id="sensorName"
+        name="sensorName"
+        type="text"
+        placeholder="Sensor Name"
+      />
+      <input id="sensorBtn" type="button" value="Submit" />
+    </form>
+    <form id="boardForm">
+      <input id="boardId" type="text" placeholder="Board ID (eui)" />
+      <input id="boardName" type="text" placeholder="Board Name" />
+      <input id="boardLat" type="text" placeholder="Location latitude" />
+      <input id="boardLong" type="text" placeholder="Location longitude" />
+      <input id="boardBtn" type="button" value="Submit" />
+    </form>
+    <form id="stationForm">
+      <input id="stationId" type="text" placeholder="Weather Station ID" />
+      <input id="stationName" type="text" placeholder="Weather Station Name" />
+      <input id="stationLat" type="text" placeholder="Location latitude" />
+      <input id="stationLong" type="text" placeholder="Location longitude" />
+      <input id="weatherStationBtn" type="button" value="Submit" />
+    </form>
+  </body>
+</html>
