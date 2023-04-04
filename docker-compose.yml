@@ -1,10 +1,9 @@
 version: "3"
 services:
   noderuby:
-    build: ./NodeRuby
-    dockerfile: ./Dockerfile
-    links:
-      - "influxdb"
+    build:
+      context: ./NodeRuby
+      dockerfile: ./Dockerfile
     environment:
       - TZ=${TIMEZONE}
       - INFLUXDB_URL=${INFLUXDB_URL}
@@ -13,11 +12,9 @@ services:
       - INFLUXDB_BUCKET=${INFLUXDB_BUCKETL}
     restart: on-failure:10
   sensormeasurements:
-    build: ./SensorMeasurements
-    dockerfile: ./Dockerfile
-    links:
-      - "influxdb"
-      - "mosquitto"
+    build:
+      context: ./SensorMeasurements
+      dockerfile: ./Dockerfile
     environment:
       - TZ=${TIMEZONE}
       - INFLUXDB_URL=${INFLUXDB_URL}
@@ -30,11 +27,9 @@ services:
       - TTN_MQTT_TOPIC=${TTN_MQTT_TOPIC}
     restart: on-failure:10
   weatherstationmeasurements:
-    build: ./WeatherStationMeasurements
-    dockerfile: ./Dockerfile
-    links:
-      - "influxdb"
-      - "mosquitto"
+    build:
+      context: ./WeatherStationMeasurements
+      dockerfile: ./Dockerfile
     environment:
       - TZ=${TIMEZONE}
       - INFLUXDB_URL=${INFLUX_URL}

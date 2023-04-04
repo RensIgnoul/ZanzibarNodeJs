@@ -10,7 +10,7 @@ const influxDB = new InfluxDB({
 });
 const writeApi = influxDB.getWriteApi(
   process.env.INFLUXDB_ORG,
-  process.env.INFLUXDB_BUCKET
+  "test"//process.env.INFLUXDB_BUCKET
 );
 
 // MQTT options

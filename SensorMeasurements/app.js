@@ -1,16 +1,18 @@
+// TODO EDIT UPDATE TAG
+
 require("dotenv").config({ path: "../.env" });
 const mqtt = require("mqtt");
 const { InfluxDB, Point } = require("@influxdata/influxdb-client");
 
 const influxDB = new InfluxDB({
   url: process.env.INFLUXDB_URL,
-  token: process.env.INFLUXDB_TOKEN,
+  token:
+    /*"cY_fUmKExku7YTUNcemt0qwiXvEwHk5GY4tQD0z40epbPHFfc4zaEPGfXbEqNeCiezisrsF7rcTxlO6-7f0dWg==",*/ process
+      .env.INFLUXDB_TOKEN,
 });
 const writeApi = influxDB.getWriteApi(
-  "APSoftwareProject",
-  "testappbucket"
-  //process.env.INFLUXDB_ORG,
-  //process.env.INFLUXDB_BUCKET
+  process.env.INFLUXDB_ORG,
+  "test"
 );
 
 // Connect to MQTT broker
@@ -20,7 +22,7 @@ const client = mqtt.connect(`mqtt://${process.env.TTN_HOST}`, {
 });
 
 // Subscribe to a topic
-const topic = process.env.TTN_MQTT_TOPIC;
+const topic = "#"; //process.env.TTN_MQTT_TOPIC;
 client.subscribe(topic, function (err) {
   if (err) {
     console.log(err);
@@ -35,18 +37,24 @@ client.on("message", function (topic, message) {
   console.log("topic is " + topic);
   const payload = JSON.parse(message);
   if (payload.uplink_message.decoded_payload.CO2_SCD !== undefined) {
-    // CO2_SCD value exists in the object
-    console.log(typeof payload.uplink_message.decoded_payload.CO2_SCD);
-    console.log(
-      "CO2_SCD value: " + payload.uplink_message.decoded_payload.CO2_SCD
-    );
     const point = new Point("testsensor")
+      .tag("id", 5)
       .intField("CO2_SCD", payload.uplink_message.decoded_payload.CO2_SCD)
-      .floatField(payload.uplink_message.decoded_payload.humidity_BME)
-      .floatField(payload.uplink_message.decoded_payload.humidity_SCD)
-      .floatField(payload.uplink_message.decoded_payload.pressure_BME)
-      .floatField(payload.uplink_message.decoded_payload.temp_BME)
-      .floatField(payload.uplink_message.decoded_payload.temp_SCD);
+      .floatField(
+        "humidity_BME",
+        payload.uplink_message.decoded_payload.humidity_BME
+      )
+      .floatField(
+        "humidity_SCD",
+        payload.uplink_message.decoded_payload.humidty_SCD
+      )
+      .floatField(
+        "pressure_BME",
+        payload.uplink_message.decoded_payload.pressure_BME
+      )
+      .floatField("temp_BME", payload.uplink_message.decoded_payload.temp_BME)
+      .floatField("temp_SCD", payload.uplink_message.decoded_payload.temp_SCD);
+    writeApi.writePoint(point);
   }
 });
 
