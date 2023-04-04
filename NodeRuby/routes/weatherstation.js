@@ -1,13 +1,13 @@
+require("dotenv").config({ path: "../.env" });
 const express = require("express");
 const router = express.Router();
 const { InfluxDB, Point } = require("@influxdata/influxdb-client");
 
 const influxDB = new InfluxDB({
-  url: "http://192.168.0.162:8086",
-  token:
-    "ehg-pTjzO24-PfHASG-9EEIyPMDkVOiu7p7FVNJMsvEFdMV2jhvwlVXCWYXimDISpGOFtWdFwAT09YY1g3E_mA==",
+  url: process.env.INFLUXDB_URL,
+  token: process.env.INFLUXDB_TOKEN
 });
-const queryApi = influxDB.getQueryApi("APSoftwareProject");
+const queryApi = influxDB.getQueryApi(process.env.INFLUXDB_ORG);
 
 router.get("/ping", (req, res) => {
   res.send("pong");
@@ -37,9 +37,9 @@ router.get("/:stationid/:fields/:start/:end/:aggregateWindow", async (req, res) 
   const aggregateWindow = req.params.aggregateWindow;
 
   try {
-    let query = `from(bucket: "TestDataBucket2")
+    let query = `from(bucket: "flwsb")
     |> range(start: ${start}, stop: ${end})
-    |> filter(fn: (r) => r["_measurement"] == "TestMeasurement")`;
+    |> filter(fn: (r) => r["_measurement"] == "weather_station")`;
     query += `|> filter(fn: (r) => r["_field"] == "${fields[0]}"`;
     //query += ` |> filter(fn: (r) => r["_field"] == "${field}")`;
     for (let i = 1; i < fields.length; i++) {

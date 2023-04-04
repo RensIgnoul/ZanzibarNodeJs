@@ -35,7 +35,7 @@ client.on("message", function (topic, message) {
   console.log("topic is " + topic);
   const payload = JSON.parse(message);
   if (payload.uplink_message.decoded_payload.CO2_SCD !== undefined) {
-    const point = new Point("testsensor")
+    const point = new Point("sensor_data")
       .tag("id", payload.end_device_ids.device_id)
       .intField("CO2_SCD", payload.uplink_message.decoded_payload.CO2_SCD)
       .floatField(
@@ -44,7 +44,7 @@ client.on("message", function (topic, message) {
       )
       .floatField(
         "humidity_SCD",
-        payload.uplink_message.decoded_payload.humidty_SCD
+        payload.uplink_message.decoded_payload.humidity_SCD
       )
       .floatField(
         "pressure_BME",
