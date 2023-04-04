@@ -12,7 +12,6 @@
     "@influxdata/influxdb-client": "^1.33.2",
     "@influxdata/influxdb-client-apis": "^1.33.2",
     "dotenv": "^16.0.3",
-    "mqtt": "^4.3.7",
-    "ttn": "^2.3.3"
+    "mqtt": "^4.3.7"
   }
 }

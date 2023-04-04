@@ -6,13 +6,11 @@ const { InfluxDB, Point } = require("@influxdata/influxdb-client");
 
 const influxDB = new InfluxDB({
   url: process.env.INFLUXDB_URL,
-  token:
-    /*"cY_fUmKExku7YTUNcemt0qwiXvEwHk5GY4tQD0z40epbPHFfc4zaEPGfXbEqNeCiezisrsF7rcTxlO6-7f0dWg==",*/ process
-      .env.INFLUXDB_TOKEN,
+  token: process.env.INFLUXDB_TOKEN,
 });
 const writeApi = influxDB.getWriteApi(
   process.env.INFLUXDB_ORG,
-  "test"
+  process.env.INFLUXDB_BUCKET
 );
 
 // Connect to MQTT broker
@@ -22,7 +20,7 @@ const client = mqtt.connect(`mqtt://${process.env.TTN_HOST}`, {
 });
 
 // Subscribe to a topic
-const topic = "#"; //process.env.TTN_MQTT_TOPIC;
+const topic = process.env.TTN_MQTT_TOPIC;
 client.subscribe(topic, function (err) {
   if (err) {
     console.log(err);
@@ -38,7 +36,7 @@ client.on("message", function (topic, message) {
   const payload = JSON.parse(message);
   if (payload.uplink_message.decoded_payload.CO2_SCD !== undefined) {
     const point = new Point("testsensor")
-      .tag("id", 5)
+      .tag("id", payload.end_device_ids.device_id)
       .intField("CO2_SCD", payload.uplink_message.decoded_payload.CO2_SCD)
       .floatField(
         "humidity_BME",
