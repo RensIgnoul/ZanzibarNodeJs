@@ -37,37 +37,35 @@ app.post("/submit-form", function (req, res) {
   //if (req.body.securityKey != process.env.DEVICE_SECURITY_KEY) {
   //  res.status(401).send("Invalid security key");
   //} else {
-  console.log("miauwtjes");
-  console.log(req.body);
-  /*const data = req.body;
-    console.log(data);
-    const payload = req.body;
+  const data = req.body;
+  console.log(data);
+  const payload = req.body;
 
-    const point = new Point("testmeasurement");
-    if (payload.hasOwnProperty("sensorId")) {
-      point
-        .stringField("boardId", payload.boardId)
-        .stringField("sensorId", payload.sensorId)
-        .stringField("SensorName", payload.sensorName);
-    } else if (payload.hasOwnProperty("boardName")) {
-      point
-        .stringField("boardId", payload.boardId)
-        .stringField("boardName", payload.boardName)
-        .stringField("latitude", payload.boatdLat)
-        .stringField("longitude", payload.boardLong);
-    } else if (payload.hasOwnProperty("stationId")) {
-      point
-        .stringField("stationId", payload.stationId)
-        .stringField("stationName", payload.stationName)
-        .stringField("latitude", payload.stationLat)
-        .stringField("longitude", payload.stationLong);
-    }
-    writeApi.writePoint(point);
+  const point = new Point("testmeasurement");
+  if (payload.hasOwnProperty("sensorId")) {
+    point
+      .stringField("boardId", payload.boardId)
+      .stringField("sensorId", payload.sensorId)
+      .stringField("SensorName", payload.sensorName);
+  } else if (payload.hasOwnProperty("boardName")) {
+    point
+      .stringField("boardId", payload.boardId)
+      .stringField("boardName", payload.boardName)
+      .stringField("latitude", payload.boatdLat)
+      .stringField("longitude", payload.boardLong);
+  } else if (payload.hasOwnProperty("stationId")) {
+    point
+      .stringField("stationId", payload.stationId)
+      .stringField("stationName", payload.stationName)
+      .stringField("latitude", payload.stationLat)
+      .stringField("longitude", payload.stationLong);
+  }
+  writeApi.writePoint(point);
 
-    writeApi.flush().then(() => {
-      console.log("Data has been written to InfluxDB");
-      res.send("Form submitted successfully");
-    });*/
+  writeApi.flush().then(() => {
+    console.log("Data has been written to InfluxDB");
+    res.send("Form submitted successfully");
+  });
 });
 
 app.listen(PORT, function () {

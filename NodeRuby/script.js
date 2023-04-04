@@ -95,7 +95,6 @@ function submitForm(event) {
     body: JSON.stringify(formData),
   })
     .then((response) => {
-      console.log(response);
       if (response.ok) {
         console.log("Form data sent successfully");
       } else {
