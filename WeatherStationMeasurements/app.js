@@ -41,7 +41,7 @@ client.on("message", function (topic, message, packet) {
   console.log("message is " + message);
   console.log("topic is " + topic);
   const payload = JSON.parse(message);
-  const point = new Point("TestWeatherStation");
+  const point = new Point("weather_station");
   if (payload.hasOwnProperty("temperature_C")) {
     point
       .tag("source", payload.id)
