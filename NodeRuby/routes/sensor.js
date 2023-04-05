@@ -13,21 +13,47 @@ router.get("/ping", (req, res) => {
   res.send("pong");
 });
 
+router.get("/:sensorid/:fields/:start/:stop", async (req, res) => {
+  const sensorid = req.params.sensorid;
+  const fields = req.params.fields.split(",");
+  const start = req.params.start;
+  const stop = req.params.stop;
+
+  try {
+    let query = `from(bucket: "flwsb")
+    |> range(start: ${start}, stop: ${stop})
+    |> filter(fn: (r) => r["_measurement"] == "sensor_data")`;
+    query += `|> filter(fn: (r) => r["_field"] == "${fields[0]}"`;
+    for (let i = 1; i < fields.length; i++) {
+      query += `or r["_field"] == "${fields[i]}"`;
+    }
+    query += `)`;
+    query += `|> filter(fn: (r) => r["id"] == "${sensorid}")`;
+
+    const rows = await queryInfluxDB(query);
+    const result = { data: rows };
+    res.setHeader("Content-Type", "application/json");
+    res.send(JSON.stringify(result));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+});
+
 router.get(
-  "/:sensorid/:fields/:start/:end/:aggregateWindow",
+  "/:sensorid/:fields/:start/:stop/:aggregateWindow",
   async (req, res) => {
     const sensorid = req.params.sensorid;
     const fields = req.params.fields.split(",");
     const start = req.params.start;
-    const end = req.params.end;
+    const stop = req.params.stop;
     const aggregateWindow = req.params.aggregateWindow;
 
     try {
       let query = `from(bucket: "flwsb")
-    |> range(start: ${start}, stop: ${end})
+    |> range(start: ${start}, stop: ${stop})
     |> filter(fn: (r) => r["_measurement"] == "sensor_data")`;
       query += `|> filter(fn: (r) => r["_field"] == "${fields[0]}"`;
-      //query += ` |> filter(fn: (r) => r["_field"] == "${field}")`;
       for (let i = 1; i < fields.length; i++) {
         query += `or r["_field"] == "${fields[i]}"`;
       }
@@ -36,7 +62,6 @@ router.get(
       |> aggregateWindow(every: ${aggregateWindow}, fn: mean, createEmpty: false)
     |> yield(name: "mean")`;
 
-      //console.log(query);
       const rows = await queryInfluxDB(query);
       const result = { data: rows };
       res.setHeader("Content-Type", "application/json");
