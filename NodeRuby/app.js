@@ -15,6 +15,7 @@ const writeApi = influxDB.getWriteApi(
   process.env.INFLUXDB_ORG,
   process.env.INFLUXDB_BUCKET
 );
+const writeApiSis = influxDB.getWriteApi(process.env.INFLUXDB_ORG, "sis");
 
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,7 +42,7 @@ app.post("/submit-form", function (req, res) {
   console.log(data);
   const payload = req.body;
 
-  const point = new Point("testmeasurement");
+  const point = new Point("device_registration");
   if (payload.hasOwnProperty("sensorId")) {
     point
       .stringField("boardId", payload.boardId)
@@ -60,9 +61,9 @@ app.post("/submit-form", function (req, res) {
       .stringField("latitude", payload.stationLat)
       .stringField("longitude", payload.stationLong);
   }
-  writeApi.writePoint(point);
+  writeApiSis.writePoint(point);
 
-  writeApi.flush().then(() => {
+  writeApiSis.flush().then(() => {
     console.log("Data has been written to InfluxDB");
     res.send("Form submitted successfully");
   });
