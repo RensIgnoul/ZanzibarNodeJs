@@ -4,13 +4,15 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const weatherstationRouter = require("./routes/weatherstation");
 const sensorRouter = require("./routes/sensor");
-
 const app = express();
 const PORT = 5000; // Set the port here
 const influxDB = new InfluxDB({
   url: process.env.INFLUXDB_URL,
   token: process.env.INFLUXDB_TOKEN,
 });
+
+app.use(express.static("public"));
+
 const writeApi = influxDB.getWriteApi(
   process.env.INFLUXDB_ORG,
   process.env.INFLUXDB_BUCKET
@@ -33,6 +35,11 @@ app.get("/script.js", function (req, res) {
   res.sendFile(__dirname + "/script.js");
 });
 
+app.get("/node_modules/bulma/css/bulma.min.css", (req, res) => {
+  res.type("text/css");
+  res.sendFile(__dirname + "/node_modules/bulma/css/bulma.min.css");
+});
+
 app.post("/submit-form", function (req, res) {
   //console.log(req.body.securityKey);
   //if (req.body.securityKey != process.env.DEVICE_SECURITY_KEY) {
@@ -45,18 +52,18 @@ app.post("/submit-form", function (req, res) {
   const point = new Point("device_registration");
   if (payload.hasOwnProperty("sensorId")) {
     point
+      .tag("sensorId", payload.sensorId)
       .stringField("boardId", payload.boardId)
-      .stringField("sensorId", payload.sensorId)
       .stringField("SensorName", payload.sensorName);
   } else if (payload.hasOwnProperty("boardName")) {
     point
-      .stringField("boardId", payload.boardId)
+      .tag("boardId", payload.boardId)
       .stringField("boardName", payload.boardName)
       .stringField("latitude", payload.boatdLat)
       .stringField("longitude", payload.boardLong);
   } else if (payload.hasOwnProperty("stationId")) {
     point
-      .stringField("stationId", payload.stationId)
+      .tag("stationId", payload.stationId)
       .stringField("stationName", payload.stationName)
       .stringField("latitude", payload.stationLat)
       .stringField("longitude", payload.stationLong);
