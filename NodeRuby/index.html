@@ -9,7 +9,7 @@
   </head>
   <script src="script.js" defer></script>
   <body>
-    <div class="navbar is-primary">
+    <div class="navbar is-link">
       <h1 class="navbar-item has-text-white is-size-3 ml-5">
         [SIS] Sensor Registration Form
       </h1>
@@ -20,6 +20,7 @@
           <label>Sensor Registration</label>
           <div class="field">
             <input
+              class="input is-normal is-hovered"
               id="boardIdS"
               name="boardId"
               type="text"
@@ -29,6 +30,7 @@
           <input type="hidden" name="formId" value="SensorForm" />
           <div class="field">
             <input
+              class="input is-normal is-hovered"
               id="sensorId"
               name="sensorId"
               type="text"
@@ -37,35 +39,74 @@
           </div>
           <div class="field">
             <input
+              class="input is-normal is-hovered"
               id="sensorName"
               name="sensorName"
               type="text"
               placeholder="Sensor Name"
             />
           </div>
-          <input id="sensorBtn" type="button" value="Submit" />
+          <input
+            class="button is-link"
+            id="sensorBtn"
+            type="button"
+            value="Submit"
+          />
+          <input
+            class="button is-link"
+            id="clearBtn1"
+            type="button"
+            value="Clear"
+          />
         </form>
       </div>
       <div class="column is-one-fifth">
         <form id="boardForm">
           <label>Board Registration</label>
           <div class="field">
-            <input id="boardId" type="text" placeholder="Board ID (eui)" />
-          </div>
-          <div class="field">
-            <input id="boardName" type="text" placeholder="Board Name" />
-          </div>
-          <div class="field">
-            <input id="boardLat" type="text" placeholder="Location latitude" />
+            <input
+              class="input is-normal is-hovered"
+              id="boardId"
+              type="text"
+              placeholder="Board ID (eui)"
+            />
           </div>
           <div class="field">
             <input
+              class="input is-normal is-hovered"
+              id="boardName"
+              type="text"
+              placeholder="Board Name"
+            />
+          </div>
+          <div class="field">
+            <input
+              class="input is-normal is-hovered"
+              id="boardLat"
+              type="text"
+              placeholder="Location latitude"
+            />
+          </div>
+          <div class="field">
+            <input
+              class="input is-normal is-hovered"
               id="boardLong"
               type="text"
               placeholder="Location longitude"
             />
           </div>
-          <input id="boardBtn" type="button" value="Submit" />
+          <input
+            class="button is-link"
+            id="boardBtn"
+            type="button"
+            value="Submit"
+          />
+          <input
+            class="button is-link"
+            id="clearBtn2"
+            type="button"
+            value="Clear"
+          />
         </form>
       </div>
       <div class="column is-one-fifth">
@@ -73,6 +114,7 @@
           <label is-size-1>Weather Station Registration</label>
           <div class="field">
             <input
+              class="input is-normal is-hovered"
               id="stationId"
               type="text"
               placeholder="Weather Station ID"
@@ -80,6 +122,7 @@
           </div>
           <div class="field">
             <input
+              class="input is-normal is-hovered"
               id="stationName"
               type="text"
               placeholder="Weather Station Name"
@@ -87,6 +130,7 @@
           </div>
           <div class="field">
             <input
+              class="input is-normal is-hovered"
               id="stationLat"
               type="text"
               placeholder="Location latitude"
@@ -94,17 +138,28 @@
           </div>
           <div class="field">
             <input
+              class="input is-normal is-hovered"
               id="stationLong"
               type="text"
               placeholder="Location longitude"
             />
           </div>
           <div class="field">
-            <input id="weatherStationBtn" type="button" value="Submit" />
+            <input
+              class="button is-link"
+              id="weatherStationBtn"
+              type="button"
+              value="Submit"
+            />
+            <input
+              class="button is-link"
+              id="clearBtn3"
+              type="button"
+              value="Clear"
+            />
           </div>
         </form>
       </div>
     </div>
-    <!--<input type="" id="key" placeholder="Security key" /> -->
   </body>
 </html>

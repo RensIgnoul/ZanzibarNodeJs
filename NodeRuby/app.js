@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const weatherstationRouter = require("./routes/weatherstation");
 const sensorRouter = require("./routes/sensor");
 const app = express();
+
 const PORT = 5000; // Set the port here
 const influxDB = new InfluxDB({
   url: process.env.INFLUXDB_URL,
@@ -59,14 +60,14 @@ app.post("/submit-form", function (req, res) {
     point
       .tag("boardId", payload.boardId)
       .stringField("boardName", payload.boardName)
-      .stringField("latitude", payload.boatdLat)
-      .stringField("longitude", payload.boardLong);
+      .floatField("latitude", payload.boardLat)
+      .floatField("longitude", payload.boardLong);
   } else if (payload.hasOwnProperty("stationId")) {
     point
       .tag("stationId", payload.stationId)
       .stringField("stationName", payload.stationName)
-      .stringField("latitude", payload.stationLat)
-      .stringField("longitude", payload.stationLong);
+      .floatField("latitude", payload.stationLat)
+      .floatField("longitude", payload.stationLong);
   }
   writeApiSis.writePoint(point);
 

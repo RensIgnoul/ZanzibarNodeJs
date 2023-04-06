@@ -52,7 +52,7 @@ client.on("message", function (topic, message) {
       )
       .floatField("temp_BME", payload.uplink_message.decoded_payload.temp_BME)
       .floatField("temp_SCD", payload.uplink_message.decoded_payload.temp_SCD);
-    writeApi.writePoint(point);
+    //writeApi.writePoint(point);
   }
 });
 

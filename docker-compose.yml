@@ -40,3 +40,17 @@ services:
       - MOSQUITTO_PASSWD=${MOSQUITTO_PASSWD}
       - MOSQUITTO_URL_WEATHER_STATION=${MOSQUITTO_URL_WEATHER_STATION}
     restart: on-failure:10
+  metadatameasurements:
+    build:
+      context: ./MetaData
+      dockerfile: ./Dockerfile
+    environment:
+      - TZ=${TIMEZONE}
+      - INFLUXDB_URL=${INFLUXDB_URL}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_ORG=${INFLUXDB_ORG}
+      - INFLUXDB_BUCKET=${INFLUXDB_BUCKET}
+      - MOSQUITTO_USER=${MOSQUITTO_USER}
+      - MOSQUITTO_PASSWD=${MOSQUITTO_PASSWD}
+      - MOSQUITTO_URL_WEATHER_STATION=${MOSQUITTO_URL_WEATHER_STATION}
+    restart: on-failure:10
