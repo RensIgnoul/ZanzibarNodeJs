@@ -10,12 +10,12 @@ const influxDB = new InfluxDB({
 });
 const writeApi = influxDB.getWriteApi(
   process.env.INFLUXDB_ORG,
-  process.env.INFLUXDB_BUCKET
+  "sis"
 );
 
 // MQTT options
 options = {
-  clientId: "mqttjs01",
+  clientId: "mqttjs02",
   username: process.env.MOSQUITTO_USER,
   password: process.env.MOSQUITTO_PASSWD,
   clean: true,
@@ -29,8 +29,8 @@ client.on("connect", function () {
 });
 
 client.on("close", function () {
-    console.log("connection closed");
-  });
+  console.log("connection closed");
+});
 
 client.on("error", function (error) {
   console.log("Can't connect" + error);
@@ -43,6 +43,15 @@ client.subscribe(topic_s, { qos: 0 });
 client.on("message", function (topic, message, packet) {
   console.log("message is " + message);
   console.log("topic is " + topic);
-});
-
+  const payload = JSON.parse(message);
+  const point = new Point("gateway_debugging")
+    .tag("host", payload.host)
+    .floatField("temperature", payload.temperature)
+    .floatField("bus_voltage", payload.bus_voltage)
+    .floatField("shunt_voltage", payload.shunt_voltage)
+    .floatField("current", payload.current)
+    .floatField("power", payload.power)
+    .floatField("p", payload.p);
   
+    writeApi.writePoint(point);
+});

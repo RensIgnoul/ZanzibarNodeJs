@@ -19,6 +19,11 @@ const client = mqtt.connect(`mqtt://${process.env.TTN_HOST}`, {
   password: process.env.TTN_API_TOKEN,
 });
 
+// Connect to MQTT
+client.on("connect", function () {
+  console.log("connected");
+});
+
 // Subscribe to a topic
 const topic = process.env.TTN_MQTT_TOPIC;
 client.subscribe(topic, function (err) {
@@ -34,7 +39,11 @@ client.on("message", function (topic, message) {
   console.log("message is " + message);
   console.log("topic is " + topic);
   const payload = JSON.parse(message);
-  if (payload.uplink_message.decoded_payload.CO2_SCD !== undefined) {
+  if (
+    payload.hasOwnProperty(
+      "uplink_message.decoded_payload"
+    ) /*.CO2_SCD !== undefined*/
+  ) {
     const point = new Point("sensor_data")
       .tag("id", payload.end_device_ids.device_id)
       .intField("CO2_SCD", payload.uplink_message.decoded_payload.CO2_SCD)

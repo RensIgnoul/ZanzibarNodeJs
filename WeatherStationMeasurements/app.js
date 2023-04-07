@@ -59,5 +59,5 @@ client.on("message", function (topic, message, packet) {
       .floatField("rain", payload.rain_mm);
   }
 
-  writeApi.writePoint(point);
+ // writeApi.writePoint(point);
 });
