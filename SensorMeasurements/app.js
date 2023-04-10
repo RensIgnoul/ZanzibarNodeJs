@@ -5,7 +5,7 @@ const mqtt = require("mqtt");
 const { InfluxDB, Point } = require("@influxdata/influxdb-client");
 
 const influxDB = new InfluxDB({
-  url: "http://localhost:2222",//process.env.INFLUXDB_URL,
+  url: process.env.INFLUXDB_URL,
   token: process.env.INFLUXDB_TOKEN,
 });
 const writeApi = influxDB.getWriteApi(
