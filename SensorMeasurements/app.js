@@ -5,7 +5,7 @@ const mqtt = require("mqtt");
 const { InfluxDB, Point } = require("@influxdata/influxdb-client");
 
 const influxDB = new InfluxDB({
-  url: process.env.INFLUXDB_URL,
+  url: "http://localhost:2222",//process.env.INFLUXDB_URL,
   token: process.env.INFLUXDB_TOKEN,
 });
 const writeApi = influxDB.getWriteApi(
@@ -39,7 +39,7 @@ client.on("message", function (topic, message) {
   console.log("message is " + message);
   console.log("topic is " + topic);
   const payload = JSON.parse(message);
-  if (payload.hasOwnProperty("uplink_message.decoded_payload")) {
+  if (topic.slice(-2)=="up"){//payload.hasOwnProperty("uplink_message.decoded_payload")) {
     let executed = false;
     const point = new Point("sensor_data").tag(
       "id",
@@ -82,22 +82,20 @@ client.on("message", function (topic, message) {
       executed = true;
     }
     if (errorbyte.toString(2).slice(-4, -3) != "1") {
-      point.booleanField("bat_critical", false);
+      point.booleanField("battery_low", false);
       executed = true;
     } else {
-      point.booleanField("bat_critical", true);
+      point.booleanField("battery_low", true);
       executed = true;
     }
     if (errorbyte.toString(2).slice(-5, -4) != "1") {
       point
         .floatField("latitude", payload.uplink_message.decoded_payload.lat)
-        .floatField("longitude", payload.uplink_message.decoded_payload.long);
+        .floatField("longitude", payload.uplink_message.decoded_payload.lon);
       executed = true;
     }
-
-    if (executed) {
-      writeApi.writePoint(point);
-    }
+    writeApi.writePoint(point);
+    
   }
 });
 
