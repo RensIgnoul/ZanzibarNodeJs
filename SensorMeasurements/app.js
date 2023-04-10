@@ -39,36 +39,63 @@ client.on("message", function (topic, message) {
   console.log("message is " + message);
   console.log("topic is " + topic);
   const payload = JSON.parse(message);
-  if (
-    payload.hasOwnProperty(
-      "uplink_message.decoded_payload"
-    ) /*.CO2_SCD !== undefined*/
-  ) {
-    const point = new Point("sensor_data")
-      .tag("id", payload.end_device_ids.device_id)
-      .intField("CO2_SCD", payload.uplink_message.decoded_payload.CO2_SCD)
-      .floatField(
-        "humidity_BME",
-        payload.uplink_message.decoded_payload.humidity_BME
-      )
-      .floatField(
-        "humidity_SCD",
-        payload.uplink_message.decoded_payload.humidity_SCD
-      )
-      .floatField(
-        "pressure_BME",
-        payload.uplink_message.decoded_payload.pressure_BME
-      )
-      .floatField("temp_BME", payload.uplink_message.decoded_payload.temp_BME)
-      .floatField("temp_SCD", payload.uplink_message.decoded_payload.temp_SCD)
-      .floatField("PM10", payload.uplink_message.decoded_payload.PM10)
-      .floatField("PM2_5", payload.uplink_message.decoded_payload.PM2_5)
-      .booleanField(
-        "bat_critical",
-        payload.uplink_message.decoded_payload.bat_critical
-      );
+  if (payload.hasOwnProperty("uplink_message.decoded_payload")) {
+    let executed = false;
+    const point = new Point("sensor_data").tag(
+      "id",
+      payload.end_device_ids.device_id
+    );
+    const errorbyte = payload.uplink_message.decoded_payload.errorbyte;
+    if (errorbyte.toString(2).slice(-1) != "1") {
+      point
+        .floatField(
+          "humidity_BME",
+          payload.uplink_message.decoded_payload.humidity_BME
+        )
+        .floatField(
+          "pressure_BME",
+          payload.uplink_message.decoded_payload.pressure_BME
+        )
+        .floatField(
+          "temp_BME",
+          payload.uplink_message.decoded_payload.temp_BME
+        );
+      executed = true;
+    }
+    if (errorbyte.toString(2).slice(-2, -1) != "1") {
+      point
+        .intField("CO2_SCD", payload.uplink_message.decoded_payload.CO2_SCD)
+        .floatField(
+          "humidity_SCD",
+          payload.uplink_message.decoded_payload.humidity_SCD
+        )
+        .floatField(
+          "temp_SCD",
+          payload.uplink_message.decoded_payload.temp_SCD
+        );
+      executed = true;
+    }
+    if (errorbyte.toString(2).slice(-3, -2) != "1") {
+      point
+        .floatField("PM10", payload.uplink_message.decoded_payload.PM10)
+        .floatField("PM2_5", payload.uplink_message.decoded_payload.PM2_5);
+      executed = true;
+    }
+    if (errorbyte.toString(2).slice(-4, -3) != "1") {
+      point.booleanField("bat_critical", false);
+      executed = true;
+    } else {
+      point.booleanField("bat_critical", true);
+      executed = true;
+    }
+    if (errorbyte.toString(2).slice(-5, -4) != "1") {
+      point
+        .floatField("latitude", payload.uplink_message.decoded_payload.lat)
+        .floatField("longitude", payload.uplink_message.decoded_payload.long);
+      executed = true;
+    }
 
-    if (payload.uplink_message.decoded_payload.errorbyte == 0) {
+    if (executed) {
       writeApi.writePoint(point);
     }
   }
