@@ -47,11 +47,10 @@ client.on("message", function (topic, message, packet) {
   const point = new Point("gateway_debugging")
     .tag("host", payload.host)
     .floatField("temperature", payload.temperature)
-    .floatField("bus_voltage", payload.bus_voltage)
-    .floatField("shunt_voltage", payload.shunt_voltage)
+    .floatField("voltage", payload.voltage)
     .floatField("current", payload.current)
     .floatField("power", payload.power)
-    .floatField("p", payload.p);
+    .floatField("percentage", payload.percentage);
   
     writeApi.writePoint(point);
 });
