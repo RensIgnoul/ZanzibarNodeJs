@@ -60,8 +60,17 @@ client.on("message", function (topic, message) {
         payload.uplink_message.decoded_payload.pressure_BME
       )
       .floatField("temp_BME", payload.uplink_message.decoded_payload.temp_BME)
-      .floatField("temp_SCD", payload.uplink_message.decoded_payload.temp_SCD);
-    writeApi.writePoint(point);
+      .floatField("temp_SCD", payload.uplink_message.decoded_payload.temp_SCD)
+      .floatField("PM10", payload.uplink_message.decoded_payload.PM10)
+      .floatField("PM2_5", payload.uplink_message.decoded_payload.PM2_5)
+      .booleanField(
+        "bat_critical",
+        payload.uplink_message.decoded_payload.bat_critical
+      );
+
+    if (payload.uplink_message.decoded_payload.errorbyte == 0) {
+      writeApi.writePoint(point);
+    }
   }
 });
 
